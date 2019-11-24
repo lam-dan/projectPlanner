@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-const BidSchema = new mongoose.Schema(
+const BidSchema = new Schema(
 	{
 		minBid: { type: Number, required: true },
 		userId: { type: String, required: true }
@@ -10,7 +11,7 @@ const BidSchema = new mongoose.Schema(
 
 mongoose.model('Bid', BidSchema)
 
-const ProjectSchema = new mongoose.Schema(
+const ProjectSchema = new Schema(
 	{
 		name: { type: String, required: true },
 		createdBy: { type: String, required: true },
