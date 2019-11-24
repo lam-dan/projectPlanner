@@ -11,9 +11,13 @@ module.exports = app => {
 	// Project object includes lowest currentBid and currentBidder
 	app.get('/projects/:projectId', projects.getProject)
 
-	//Update a Project
+	// Places the lowest minumum bid on a Project that a contractor is willing to
+	// work to complete a project.
+	app.put('/projects/bid/:projectId', projects.addBid)
+
+	//Update a Project details
 	app.put('/projects/:projectId', projects.updateProject)
 
-	// Delete a Prjoejct with a projectId
+	// Delete a Project with a projectId
 	app.delete('/projects/:projectId', projects.deleteProject)
 }
