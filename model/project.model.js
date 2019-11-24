@@ -12,14 +12,14 @@ mongoose.model('Bid', BidSchema)
 
 const ProjectSchema = new mongoose.Schema(
 	{
-		name: { type: Number, required: true },
+		name: { type: String, required: true },
 		createdBy: { type: String, required: true },
 		description: { type: String, required: true },
 		// Total budget for the project which current bid cannot exceed
 		budget: { type: Number, required: true },
 		date: { type: Date, required: true },
 		// Current lowest bid for a project and cannot be smaller the minimum bid.
-		currentBid: { type: Number, required: false, default: 0 },
+		currentBid: { type: Number, required: false },
 		// Current lowest bidder which includes his maximum bid for the project.
 		currentBidder: { type: BidSchema, required: false },
 		// An array of Bid Schemas

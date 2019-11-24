@@ -14,7 +14,7 @@ exports.create = (req, res) => {
 
 	const project = new Project({
 		name: req.body.name || 'No Project Name.',
-		createdBy: req.body.userId,
+		createdBy: req.body.createdBy,
 		description: req.body.description,
 		budget: req.body.budget,
 		date: req.body.date
@@ -22,8 +22,8 @@ exports.create = (req, res) => {
 
 	project
 		.save()
-		.then(data => {
-			res.send(data)
+		.then(project => {
+			res.send(project)
 		})
 		.catch(err => {
 			res.status(500).send({
@@ -97,14 +97,26 @@ exports.addBid = (req, res) => {
 				})
 			}
 
-			// Check if the user's bid lower than the budget
-			if (newBid.minBid > project.budget) {
+			// Check if the user's bid lower is than the budget OR
+			// if the user's bid is past the due deadline
+			if (
+				newBid.minBid > project.budget ||
+				newBid.createdAt > project.date
+			) {
 				return res.status(400).send({
-					message: 'Bid placed exceeds budget for the project.'
+					message:
+						'Bid cannot be placed because it is too high or past the due date'
 				})
 			}
+
+			// Check current bid to see it does not exist
+			if (!project.currentBid) {
+				project.currentBid.set(newBid.minBid)
+				project.currentBidder.set(newBid)
+			}
+
 			// Check if the user's bid is lower than the current bid.
-			if (newBid.minBid < project.currentBid) {
+			else if (newBid.minBid < project.currentBid) {
 				// Check if user's bid is lower than the lowest minimum bid of the current bidder
 				if (newBid.minBid < project.currentBidder.minBid) {
 					project.currentBid.set(newBid.minBid)
@@ -114,15 +126,16 @@ exports.addBid = (req, res) => {
 					// while keeping the current bidder
 					project.currentBid.set(newBid.minBid)
 				}
-				// Added bid placed to bid history Array
-				project.bidHistory.push(newBid)
 			}
+
+			// Added bid to bid history Array
+			project.bidHistory.push(newBid)
 
 			// Save the project after updates
 			project
 				.save()
 				.then(project => {
-					res.send(data)
+					res.send(project)
 				})
 				.catch(err => {
 					res.status(500).send({
