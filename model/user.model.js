@@ -16,6 +16,10 @@ const UserSchema = new mongoose.Schema(
 			unique: true,
 			match: /\S+@\S+\.\S+/
 		},
+		// Account role: type 1 = contractor, type 2 = client
+		// Determines what operations are allowed in the database
+		type: { type: Number, required: true, default: 1 },
+
 		// updated to an array of objects to allow multiple phone numbers
 		phone: {
 			type: [

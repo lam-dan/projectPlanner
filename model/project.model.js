@@ -2,9 +2,8 @@ const mongoose = require('mongoose')
 
 const BidSchema = new mongoose.Schema(
 	{
-		maxBid: { type: Number, required: true },
-		userId: { type: String, required: true },
-		date: { type: Date, required: true }
+		minBid: { type: Number, required: true },
+		userId: { type: String, required: true }
 	},
 	{ timestamps: true }
 )
@@ -20,7 +19,7 @@ const ProjectSchema = new mongoose.Schema(
 		budget: { type: Number, required: true },
 		date: { type: Date, required: true },
 		// Current lowest bid for a project and cannot be smaller the minimum bid.
-		currentBid: { type: Number, required: false },
+		currentBid: { type: Number, required: false, default: 0 },
 		// Current lowest bidder which includes his maximum bid for the project.
 		currentBidder: { type: BidSchema, required: false },
 		// An array of Bid Schemas
