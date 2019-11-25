@@ -11,17 +11,24 @@ A run time environment that allows JavaScript to be ran in the back-end.  This i
 ## REST API
 Representational State Transfer is nothing more than what the server will transfer back to the client a representation of the state of the requested resource.  For our application, our endpoints and methods are the following:
 * POST https://www.websitename.com/projects 
-** Creating a new project.
-* GET https://www.websitename.com/projects Retrieving all projects
-* GET https://www.websitename.com/projects/:projectId Retrieving a single Project with a project id in the parameters. Project Object includes lowest currentBid and currentBidder.
-* PUT https://www.websitename.com/projects/:projectId Updates a project details
-* PUT https://www.websitename.com/projects/bid/:projectId Places the lowest min bid on a project that a contractor is willing to work.
-* DELETE https://www.websitename.com/projects/:projectId Deletes a project with a project id.
-* POST https://www.websitename.com/users/create Registers a user.
-* POST https://www.websitename.com/users/authenticate Authenticates a user.
+    * Creating a new project.
+* GET https://www.websitename.com/projects 
+    * Retrieving all projects
+* GET https://www.websitename.com/projects/:projectId 
+    * Retrieving a single Project with a project id in the parameters. Project Object includes lowest currentBid and currentBidder.
+* PUT https://www.websitename.com/projects/:projectId 
+    * Updates a project details
+* PUT https://www.websitename.com/projects/bid/:projectId 
+    * Places the lowest min bid on a project that a contractor is willing to work.
+* DELETE https://www.websitename.com/projects/:projectId 
+    * Deletes a project with a project id.
+* POST https://www.websitename.com/users/create 
+    * Registers a user.
+* POST https://www.websitename.com/users/authenticate 
+    * Authenticates a user.
+    
 ## Promises 
 Promises were used instead of callbacks because of its ability to easily chain asynchronous calls and avoid nested callbacks, therefore, making the code much more readable.  By chaining asynchronous calls, we can catch all the errors in one catch statement.
-
 
 ## Auto-Bid Logic
 * Project contains ‘currentBid’ field, which displays the current lowest winning bid for the project.
