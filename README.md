@@ -18,21 +18,21 @@ Representational State Transfer is nothing more than what the server will transf
 Local Development: localhost:3000
 
 For our application, our endpoints and methods are the following:
-* POST https://<domainName>/projects 
+* POST https://{domainName}/projects 
     * Creating a new project.
-* GET https://<domainName>/projects 
+* GET https://{domainName}/projects 
     * Retrieving all projects
-* GET https://<domainName>/projects/:projectId 
+* GET https://{domainName}/projects/:projectId 
     * Retrieving a single Project with a project id in the parameters. Project Object includes lowest currentBid and currentBidder.
-* PUT https://<domainName>/projects/:projectId 
+* PUT https://{domainName}/projects/:projectId 
     * Updates a project details
-* PUT https://<domainName>/projects/bid/:projectId 
+* PUT https://{domainName}/projects/bid/:projectId 
     * Places the lowest min bid on a project that a contractor is willing to work.
-* DELETE https://<domainName>/projects/:projectId 
+* DELETE https://{domainName}/projects/:projectId 
     * Deletes a project with a project id.
-* POST https://<domainName>/users/create 
+* POST https://{domainName}/users/create 
     * Registers a user.
-* POST https://<domainName>/users/authenticate 
+* POST https://{domainName}/users/authenticate 
     * Authenticates a user.
     
 ## Promises 
