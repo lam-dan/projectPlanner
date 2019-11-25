@@ -1,5 +1,4 @@
 const Project = require('../model/project.model')
-const User = require('../model/user.model')
 const mongoose = require('mongoose')
 const Bid = mongoose.model('Bid')
 
@@ -173,22 +172,39 @@ module.exports = {
 
 	// Delete a project with the specified projectId in the request.
 	deleteProject: (req, res) => {
-		Project.findByIdAndRemove(req.params.projectId)
+		Project.findById(req.params.projectId)
 			.then(project => {
 				if (!project) {
-					return res.status(404).send({
-						message: `Project not found with id ${req.params.projectId}`
+					return res.status(400).send({
+						message: `Project not found with id ${req.params.projectId}.`
 					})
 				}
-				res.send({
-					status: 'Success',
-					message: 'Project deleted.'
-				})
+				// Validation to only allow the user who created the project to delete the project
+				if (project.createdBy !== req.body.userId) {
+					return res.status(403).send({
+						message: `Permission denied with id ${req.params.projectId}.`
+					})
+				}
+				project
+					.remove()
+					.then(project => {
+						res.send({
+							status: 'Success',
+							message: 'Project was successfully deleted.'
+						})
+					})
+					.catch(err => {
+						res.status(500).send({
+							message:
+								err.message ||
+								'Something went wrong while deleting the project.'
+						})
+					})
 			})
 			.catch(err => {
-				if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-					return res.status(404).send({
-						message: `Project not found with id ${req.params.projectId}`
+				if (err.kind === 'ObjectId') {
+					return res.status(400).send({
+						message: `Project not found with id ${req.params.projectId}.`
 					})
 				}
 				return res.status(500).send({
@@ -206,39 +222,48 @@ module.exports = {
 			})
 		}
 
-		
-		//Find and update project with the request body.
-		Project.findByIdAndUpdate(
-			req.params.projectId,
-			{
-				name: req.body.name,
-				createdBy: req.body.createdBy,
-				description: req.body.description,
-				budget: req.body.budget,
-				date: req.body.date
-			},
-			{ new: true }
-		)
+		Project.findById(req.params.projectId)
 			.then(project => {
 				if (!project) {
-					return res.status(404).send({
-						message: `Project not found with id ${req.params.projectId}`
+					return res.status(400).send({
+						message: `Project not found with id ${req.params.projectId}.`
 					})
 				}
-				res.send({
-					status: 'Success',
-					message: 'Project updated.',
-					data: { project: project }
-				})
+				// Validation to only allow the user who created the project to update the project
+				if (project.createdBy !== req.body.userId) {
+					return res.status(403).send({
+						message: `Permission denied with id ${req.params.projectId}.`
+					})
+				}
+				project.name = req.body.name
+				project.description = req.body.description
+				project.budget = req.body.budget
+				project.date = req.body.date
+				project
+					.save()
+					.then(project => {
+						res.send({
+							status: 'Success',
+							message: 'Project was successfully updated.',
+							data: { project: project }
+						})
+					})
+					.catch(err => {
+						res.status(500).send({
+							message:
+								err.message ||
+								'Something went wrong while deleting the project.'
+						})
+					})
 			})
 			.catch(err => {
 				if (err.kind === 'ObjectId') {
-					return res.status(404).send({
-						message: `Project not found with id ${req.params.projectId}`
+					return res.status(400).send({
+						message: `Project not found with id ${req.params.projectId}.`
 					})
 				}
 				return res.status(500).send({
-					message: `Something wrong updating project with id ${req.params.projectId}`
+					message: `Could not delete project with id ${req.params.projectId}`
 				})
 			})
 	}

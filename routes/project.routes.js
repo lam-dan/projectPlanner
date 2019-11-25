@@ -1,6 +1,9 @@
 var jwt = require('jsonwebtoken')
 
+// Method ran on all private api endpoints.
 const validateUser = (req, res, next) => {
+	// Verifies token from headers against server secrey key token and if successfully decoded
+	// passes the user id to the request.
 	jwt.verify(
 		req.headers['x-access-token'],
 		req.app.get('secretKey'),

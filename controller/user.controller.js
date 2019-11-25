@@ -4,8 +4,7 @@ const jwt = require('jsonwebtoken')
 const saltRounds = 10
 
 module.exports = {
-	create: (req, res, next) => {
-		console.log('Create controller here')
+	create: (req, res) => {
 		// Fast exit to check if request body exists
 		if (!req.body) {
 			return res.status(400).send({
@@ -37,18 +36,30 @@ module.exports = {
 	// Authenticate users upon when they log by checking their password and
 	// generating a one hour expiring token for them
 	authenticate: (req, res) => {
+		// Fast exit to check if request body exists.
+		if (!req.body) {
+			return res.status(400).send({
+				message: 'User body cannot be empty.'
+			})
+		}
+
 		User.findOne({ email: req.body.email })
 			.then(user => {
+				// Bcrypt to hash the password given and compare it against the one stored in the database.
 				if (bcrypt.compareSync(req.body.password, user.password)) {
+					// Generate token by using the server's secret key, and user id.
+					// The token will be used on each API request to authenticate the user and obtain the user id
+					// Token expires in one hour
 					const token = jwt.sign(
 						{ id: user._id },
 						req.app.get('secretKey'),
 						{ expiresIn: '1h' }
 					)
+					// Send token to the client so it can be stored in client session or local storage to be used for api requests
 					res.send({
 						status: 'Success',
 						message: 'User authenticated.',
-						data: { user: user, token: token }
+						data: { token: token }
 					})
 				}
 			})

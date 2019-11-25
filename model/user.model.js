@@ -23,7 +23,7 @@ const UserSchema = new Schema(
 			match: /\S+@\S+\.\S+/
 		},
 		// Account role: type 1 = contractor, type 2 = client, type 9 = admin
-		// Determines what operations are allowed in the database
+		// TBD: Used for front end functionality and back-end permissions
 		type: { type: Number, required: true },
 		password: {
 			type: String,
