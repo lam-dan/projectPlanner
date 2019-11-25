@@ -13,22 +13,26 @@ Express is a server side web application framework for Node.js, released as free
 ## NodeJS 
 A run time environment that allows JavaScript to be ran in the back-end.  This is especially useful when the front-end application is also written in JavaScript using more of the popular front end frameworks such as Angular and React.  Since the whole application front end back is one language, it allows developers to be more uniformed in coding style and format and more well versed in dealing with all aspects of the application. NodeJS is non-blocking meaning multiple things could be happening at the same time, it does not wait for the callback to complete. It runs on a V8 engine that also processes C++ code behind the scenes to manage other events.
 ### REST API
-Representational State Transfer is nothing more than what the server will transfer back to the client a representation of the state of the requested resource.  For our application, our endpoints and methods are the following:
-* POST https://www.websitename.com/projects 
+Representational State Transfer is nothing more than what the server will transfer back to the client a representation of the state of the requested resource.  
+
+Local Development: localhost:3000
+
+For our application, our endpoints and methods are the following:
+* POST https://<domainName>/projects 
     * Creating a new project.
-* GET https://www.websitename.com/projects 
+* GET https://<domainName>/projects 
     * Retrieving all projects
-* GET https://www.websitename.com/projects/:projectId 
+* GET https://<domainName>/projects/:projectId 
     * Retrieving a single Project with a project id in the parameters. Project Object includes lowest currentBid and currentBidder.
-* PUT https://www.websitename.com/projects/:projectId 
+* PUT https://<domainName>/projects/:projectId 
     * Updates a project details
-* PUT https://www.websitename.com/projects/bid/:projectId 
+* PUT https://<domainName>/projects/bid/:projectId 
     * Places the lowest min bid on a project that a contractor is willing to work.
-* DELETE https://www.websitename.com/projects/:projectId 
+* DELETE https://<domainName>/projects/:projectId 
     * Deletes a project with a project id.
-* POST https://www.websitename.com/users/create 
+* POST https://<domainName>/users/create 
     * Registers a user.
-* POST https://www.websitename.com/users/authenticate 
+* POST https://<domainName>/users/authenticate 
     * Authenticates a user.
     
 ## Promises 
