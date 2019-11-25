@@ -1,27 +1,37 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
+const saltRounds = 10
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema(
 	{
 		firstName: {
 			type: String,
+			trim: true,
 			required: true
 		},
 		lastName: {
 			type: String,
+			trim: true,
 			required: true
 		},
 		email: {
 			type: String,
+			trim: true,
 			required: true,
 			unique: true,
 			match: /\S+@\S+\.\S+/
 		},
-		// Account role: type 1 = contractor, type 2 = client
+		// Account role: type 1 = contractor, type 2 = client, type 9 = admin
 		// Determines what operations are allowed in the database
-		type: { type: Number, required: true, default: 1 },
+		type: { type: Number, required: true },
+		password: {
+			type: String,
+			trim: true,
+			required: true
+		},
 
-		// updated to an array of objects to allow multiple phone numbers
+		// An array of objects to allow multiple phone numbers
 		phone: {
 			type: [
 				{

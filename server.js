@@ -1,7 +1,15 @@
 // Server Dependencies
 const express = require('express')
+const logger = require('morgan')
 const bodyParser = require('body-parser')
 const app = express()
+const secret = require('./secret.env')
+
+// Setting the secret token
+app.set('secretKey', secret.key)
+
+// HTTP Request logger middleware
+app.use(logger('dev'))
 
 // Parse Requests
 app.use(bodyParser.urlencoded({ extended: false }))

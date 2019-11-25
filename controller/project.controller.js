@@ -12,7 +12,7 @@ module.exports = {
 				message: 'Project content cannot be empty.'
 			})
 		}
-
+		// Create new Project from request body
 		const project = new Project({
 			name: req.body.name || 'No Project Name.',
 			createdBy: req.body.createdBy,
@@ -21,10 +21,15 @@ module.exports = {
 			date: req.body.date
 		})
 
+		// Asychronously save project in database
 		project
 			.save()
 			.then(project => {
-				res.send(project)
+				res.send({
+					status: 'Success',
+					message: 'Project created.',
+					data: { project: project }
+				})
 			})
 			.catch(err => {
 				res.status(500).send({
@@ -39,7 +44,11 @@ module.exports = {
 	getAllProjects: (req, res) => {
 		Project.find()
 			.then(projects => {
-				res.send(projects)
+				res.send({
+					status: 'Success',
+					message: 'Projects found.',
+					data: { projects: projects }
+				})
 			})
 			.catch(err => {
 				res.status(500).send({
@@ -60,7 +69,11 @@ module.exports = {
 						message: `Project not found with id ${req.params.projectId}.`
 					})
 				}
-				res.send(project)
+				res.send({
+					status: 'Success',
+					message: 'Project found.',
+					data: { project: project }
+				})
 			})
 			.catch(err => {
 				if (err.kind === 'ObjectId') {
@@ -82,7 +95,7 @@ module.exports = {
 				message: 'Bid cannot be empty.'
 			})
 		}
-
+		// Create a new bid
 		let newBid = new Bid({
 			minBid: req.body.minBid,
 			userId: req.body.userId
@@ -95,7 +108,6 @@ module.exports = {
 						message: `Project not found with id ${req.params.projectId}.`
 					})
 				}
-
 				// Check if the user's bid lower is than the budget OR
 				// if the user's bid is past the due deadline
 				if (
@@ -133,7 +145,11 @@ module.exports = {
 				project
 					.save()
 					.then(project => {
-						res.send(project)
+						res.send({
+							status: 'Success',
+							message: 'Project updated with new bid.',
+							data: { project: project }
+						})
 					})
 					.catch(err => {
 						res.status(500).send({
@@ -165,7 +181,8 @@ module.exports = {
 					})
 				}
 				res.send({
-					message: 'Project deleted successfully.'
+					status: 'Success',
+					message: 'Project deleted.'
 				})
 			})
 			.catch(err => {
@@ -188,6 +205,8 @@ module.exports = {
 				message: 'Project content cannot be empty.'
 			})
 		}
+
+		
 		//Find and update project with the request body.
 		Project.findByIdAndUpdate(
 			req.params.projectId,
@@ -206,7 +225,11 @@ module.exports = {
 						message: `Project not found with id ${req.params.projectId}`
 					})
 				}
-				res.send(project)
+				res.send({
+					status: 'Success',
+					message: 'Project updated.',
+					data: { project: project }
+				})
 			})
 			.catch(err => {
 				if (err.kind === 'ObjectId') {
