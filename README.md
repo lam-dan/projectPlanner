@@ -22,21 +22,20 @@ For our application, our resource endpoints and methods are the following:
 ### Public Routes
 * POST https://{domainName}/users/create 
     * Registers a user.
-      `
+      ```
       {
        "firstName": "{firstName}",
        "lastName": "{lastName}",
        "email": "{email}",
        "password": "{password}"
-      }
-      `
+      }```
     
 * POST https://{domainName}/users/authenticate 
     * Authenticates a user.
-      {
+   ```{
       "password":"{password}",
       "email":"{email}"
-      }
+      }```
 
 ### Private Routes
 The following routes require token authorization that comes from authenticating the user.  
@@ -45,12 +44,13 @@ Example: 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ4kE5_ioAoIE'
 
 * POST https://{domainName}/projects 
     * Creating a new project.
-    {
+    Example:
+    ```{
        "name": "{projectName}",
        "description": "{description}",
        "budget": {number},
        "date": "{mm/dd/yyyy}"
-     }
+     }```
     
 * GET https://{domainName}/projects 
     * Retrieving all projects
