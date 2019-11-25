@@ -42,6 +42,7 @@ For our application, our resource endpoints and methods are the following:
 The following routes require token authorization that comes from authenticating the user.  
 
 Request headers need to be passed `'x-access-token'` with the value of the token from authenticating a user.
+
 Example: `'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ4kE5_ioAoIE'`
 
 * POST https://`domainName`/projects 
