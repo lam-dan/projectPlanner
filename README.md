@@ -10,7 +10,8 @@ Express is a server side web application framework for Node.js, released as free
 A run time environment that allows JavaScript to be ran in the back-end.  This is especially useful when the front-end application is also written in JavaScript using more of the popular front end frameworks such as Angular and React.  Since the whole application front end back is one language, it allows developers to be more uniformed in coding style and format and more well versed in dealing with all aspects of the application. NodeJS is non-blocking meaning multiple things could be happening at the same time, it does not wait for the callback to complete. It runs on a V8 engine that also processes C++ code behind the scenes to manage other events.
 ## REST API
 Representational State Transfer is nothing more than what the server will transfer back to the client a representation of the state of the requested resource.  For our application, our endpoints and methods are the following:
-* POST https://www.websitename.com/projects Creating a new project.
+* POST https://www.websitename.com/projects 
+__* Creating a new project.
 * GET https://www.websitename.com/projects Retrieving all projects
 * GET https://www.websitename.com/projects/:projectId Retrieving a single Project with a project id in the parameters. Project Object includes lowest currentBid and currentBidder.
 * PUT https://www.websitename.com/projects/:projectId Updates a project details
