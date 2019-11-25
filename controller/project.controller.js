@@ -95,9 +95,9 @@ module.exports = {
 	// Add a new bid.
 	addBid: (req, res) => {
 		// Fast exit to check if request body exists
-		if (!req.body) {
+		if (!req.body || req.body.minBid < 0) {
 			return res.status(400).send({
-				message: 'Bid cannot be empty.'
+				message: 'Bid cannot be empty or negative.'
 			})
 		}
 		// Prevent clients from bidding on projects.
