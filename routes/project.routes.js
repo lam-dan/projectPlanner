@@ -37,7 +37,7 @@ module.exports = app => {
 	app.get('/projects/:projectId', validateUser, projects.getProject)
 
 	// Places the lowest minumum bid on a Project that a contractor is willing to
-	// work to complete a project.
+	// work.
 	app.put('/projects/bid/:projectId', validateUser, projects.addBid)
 
 	//Update a Project details
