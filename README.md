@@ -22,12 +22,14 @@ For our application, our resource endpoints and methods are the following:
 ### Public Routes
 * POST https://{domainName}/users/create 
     * Registers a user.
-      `{
+      `
+      {
        "firstName": "{firstName}",
        "lastName": "{lastName}",
        "email": "{email}",
        "password": "{password}"
-      }`
+      }
+      `
     
 * POST https://{domainName}/users/authenticate 
     * Authenticates a user.
