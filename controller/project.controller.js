@@ -31,7 +31,7 @@ module.exports = {
 			.save()
 			.then(project => {
 				res.send({
-					status: 'Success',
+					status: 'Success.',
 					message: 'Project created.',
 					data: { project: project }
 				})
@@ -50,7 +50,7 @@ module.exports = {
 		Project.find()
 			.then(projects => {
 				res.send({
-					status: 'Success',
+					status: 'Success.',
 					message: 'Projects found.',
 					data: { projects: projects }
 				})
@@ -75,7 +75,7 @@ module.exports = {
 					})
 				}
 				res.send({
-					status: 'Success',
+					status: 'Success.',
 					message: 'Project found.',
 					data: { project: project }
 				})
@@ -152,23 +152,15 @@ module.exports = {
 				// Add bid to project bid history Array
 				project.bidHistory.push(newBid)
 
-				// Save the project after updates
-				project
-					.save()
-					.then(project => {
-						res.send({
-							status: 'Success',
-							message: 'Project updated with new bid.',
-							data: { project: project }
-						})
-					})
-					.catch(err => {
-						res.status(500).send({
-							message:
-								err.message ||
-								'Something went wrong while updating the project.'
-						})
-					})
+				// Return saved project after updates
+				return project.save()
+			})
+			.then(project => {
+				res.send({
+					status: 'Success.',
+					message: 'Project updated with new bid.',
+					data: { project: project }
+				})
 			})
 			.catch(err => {
 				if (err.kind === 'ObjectId') {
@@ -177,7 +169,7 @@ module.exports = {
 					})
 				}
 				return res.status(500).send({
-					message: `Something wrong retrieving project with id ${req.params.projectId}`
+					message: `Something updating the project with id ${req.params.projectId}`
 				})
 			})
 	},
@@ -203,21 +195,13 @@ module.exports = {
 						message: `Permission denied with id ${req.params.projectId}.`
 					})
 				}
-				project
-					.remove()
-					.then(project => {
-						res.send({
-							status: 'Success',
-							message: 'Project was successfully deleted.'
-						})
-					})
-					.catch(err => {
-						res.status(500).send({
-							message:
-								err.message ||
-								'Something went wrong while deleting the project.'
-						})
-					})
+				return project.remove()
+			})
+			.then(project => {
+				res.send({
+					status: 'Success.',
+					message: 'Project was successfully deleted.'
+				})
 			})
 			.catch(err => {
 				if (err.kind === 'ObjectId') {
@@ -259,26 +243,19 @@ module.exports = {
 						message: `Permission denied with id ${req.params.projectId}.`
 					})
 				}
+				// Update project with req body.
 				project.name = req.body.name
 				project.description = req.body.description
 				project.budget = req.body.budget
 				project.date = req.body.date
-				project
-					.save()
-					.then(project => {
-						res.send({
-							status: 'Success',
-							message: 'Project was successfully updated.',
-							data: { project: project }
-						})
-					})
-					.catch(err => {
-						res.status(500).send({
-							message:
-								err.message ||
-								'Something went wrong while deleting the project.'
-						})
-					})
+				return project.save()
+			})
+			.then(project => {
+				res.send({
+					status: 'Success.',
+					message: 'Project was successfully updated.',
+					data: { project: project }
+				})
 			})
 			.catch(err => {
 				if (err.kind === 'ObjectId') {

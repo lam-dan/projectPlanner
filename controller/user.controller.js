@@ -57,7 +57,7 @@ module.exports = {
 					)
 					// Send token to the client so it can be stored in client session or local storage to be used for api requests
 					res.send({
-						status: 'Success',
+						status: 'Success.',
 						message: 'User authenticated.',
 						data: { token: token }
 					})
@@ -65,7 +65,7 @@ module.exports = {
 			})
 			.catch(err => {
 				res.send({
-					status: 'Error',
+					status: 'Error.',
 					message: err.message || 'Invalid email or password.',
 					data: null
 				})
