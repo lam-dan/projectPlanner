@@ -16,6 +16,7 @@ const validateUser = (req, res, next) => {
 				})
 			} else {
 				req.body.userId = decoded.id
+				req.body.type = decoded.type
 				next()
 			}
 		}

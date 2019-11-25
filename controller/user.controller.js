@@ -51,7 +51,7 @@ module.exports = {
 					// The token will be used on each API request to authenticate the user and obtain the user id
 					// Token expires in one hour
 					const token = jwt.sign(
-						{ id: user._id },
+						{ id: user._id, type: user.type },
 						req.app.get('secretKey'),
 						{ expiresIn: '1h' }
 					)

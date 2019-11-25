@@ -11,6 +11,12 @@ module.exports = {
 				message: 'Project content cannot be empty.'
 			})
 		}
+		// Prevent contractors from creating projects
+		if (req.body.type === 1) {
+			return res.status(403).send({
+				message: `Permission denied with id ${req.params.projectId}.`
+			})
+		}
 		// Create new Project from request body
 		const project = new Project({
 			name: req.body.name || 'No Project Name.',
@@ -94,6 +100,12 @@ module.exports = {
 				message: 'Bid cannot be empty.'
 			})
 		}
+		// Prevent clients from bidding on projects.
+		if (req.body.type === 2) {
+			return res.status(403).send({
+				message: `Permission denied with id ${req.params.projectId}.`
+			})
+		}
 		// Create a new bid
 		let newBid = new Bid({
 			minBid: req.body.minBid,
@@ -172,6 +184,12 @@ module.exports = {
 
 	// Delete a project with the specified projectId in the request.
 	deleteProject: (req, res) => {
+		// Prevents contractors from deleting projects
+		if (req.body.type === 1) {
+			return res.status(403).send({
+				message: `Permission denied with id ${req.params.projectId}.`
+			})
+		}
 		Project.findById(req.params.projectId)
 			.then(project => {
 				if (!project) {
@@ -219,6 +237,12 @@ module.exports = {
 		if (!req.body) {
 			return res.status(400).send({
 				message: 'Project content cannot be empty.'
+			})
+		}
+		// Prevents contrators from updating projects
+		if (req.body.type === 1) {
+			return res.status(403).send({
+				message: `Permission denied with id ${req.params.projectId}.`
 			})
 		}
 
