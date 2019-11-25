@@ -4,23 +4,21 @@ var jwt = require('jsonwebtoken')
 const validateUser = (req, res, next) => {
 	// Verifies token from headers against server secrey key token and if successfully decoded
 	// passes the user id to the request.
-	jwt.verify(
-		req.headers['x-access-token'],
-		req.app.get('secretKey'),
-		(err, decoded) => {
-			if (err) {
-				res.send({
-					status: 'Error',
-					message: err.message,
-					data: null
-				})
-			} else {
-				req.body.userId = decoded.id
-				req.body.type = decoded.type
-				next()
-			}
-		}
-	)
+	try {
+		let decoded = jwt.verify(
+			req.headers['x-access-token'],
+			req.app.get('secretKey')
+		)
+		req.body.userId = decoded.id
+		req.body.type = decoded.type
+		next()
+	} catch (err) {
+		res.send({
+			status: 'Error',
+			message: err.message,
+			data: null
+		})
+	}
 }
 
 module.exports = app => {
