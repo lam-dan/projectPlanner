@@ -17,23 +17,55 @@ Representational State Transfer is nothing more than what the server will transf
 
 Local Development domain name is: localhost:3000
 
-For our application, our endpoints and methods are the following:
-* POST https://{domainName}/projects 
-    * Creating a new project.
-* GET https://{domainName}/projects 
-    * Retrieving all projects
-* GET https://{domainName}/projects/:projectId 
-    * Retrieving a single Project with a project id in the parameters. Project Object includes lowest currentBid and currentBidder.
-* PUT https://{domainName}/projects/:projectId 
-    * Updates a project details
-* PUT https://{domainName}/projects/bid/:projectId 
-    * Places the lowest min bid on a project that a contractor is willing to work.
-* DELETE https://{domainName}/projects/:projectId 
-    * Deletes a project with a project id.
+For our application, our resource endpoints and methods are the following:
+
+### Public Routes
 * POST https://{domainName}/users/create 
     * Registers a user.
+      {
+       "firstName": "{firstName}",
+       "lastName": "{lastName}",
+       "email": "{email}",
+       "password": "{password}"
+      }
+    
 * POST https://{domainName}/users/authenticate 
     * Authenticates a user.
+      {
+      "password":"{password}",
+      "email":"{email}"
+      }
+
+### Private Routes
+The following routes require token authorization that comes from authenticating the user.  
+Request headers need to be passed 'x-access-token' with the value of the token from authenticating a user.
+Example: 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ4kE5_ioAoIE'
+
+* POST https://{domainName}/projects 
+    * Creating a new project.
+    {
+       "name": "{projectName}",
+       "description": "{description}",
+       "budget": {number},
+       "date": "{mm/dd/yyyy}"
+     }
+    
+* GET https://{domainName}/projects 
+    * Retrieving all projects
+    
+* GET https://{domainName}/projects/:projectId 
+    * Retrieving a single Project with a project id in the parameters. Project Object includes lowest currentBid and currentBidder.
+    
+* PUT https://{domainName}/projects/:projectId 
+    * Updates a project details
+    
+* PUT https://{domainName}/projects/bid/:projectId 
+    * Places the lowest min bid on a project that a contractor is willing to work.
+    
+* DELETE https://{domainName}/projects/:projectId 
+    * Deletes a project with a project id.
+    
+
     
 ## Promises 
 Promises were used instead of callbacks because of its ability to easily chain asynchronous calls and avoid nested callbacks, therefore, making the code much more readable.  By chaining asynchronous calls, we can catch all the errors in one catch statement.
