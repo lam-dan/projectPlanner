@@ -2,7 +2,7 @@
 As part of a job application, I am building a REST api to be used at the marketplace for contractors. The market place allows the clients to post jobs, while contractors can bid for projects. 
 
 # Tech Stack
-   ## MongoDB
+## MongoDB
 MongoDB is a non-relational database, which stores objects (documents). The data objects are stored as separate documents inside a collection — instead of storing the data into the columns and rows of a traditional relational database.  Data is represented in JSON. No joins allows you the freedom to grab all data in one query instead of multiple queries with SQL relational databases. At the same time, it can also create relationships with object embedding or object referencing. Its native scale-out architecture, enabled by auto ‘sharding,’ aligns well with the horizontal scaling and agility afforded by cloud computing. Sharding essentially means distributing the data  records across multiple machines on multiple servers rather than a single server hosting the entire database.
     ### Express 
 Express is a server side web application framework for Node.js, released as free and open-source software under the MIT License. It is designed for building web applications and APIs. It has been called the de facto standard server framework for Node.js Express is preferred because it adds dead simple routing, support for handling requests and views, support for Connect middleware, and allowing many other extensions and useful features. 
@@ -30,6 +30,7 @@ Representational State Transfer is nothing more than what the server will transf
 ## Promises 
 Promises were used instead of callbacks because of its ability to easily chain asynchronous calls and avoid nested callbacks, therefore, making the code much more readable.  By chaining asynchronous calls, we can catch all the errors in one catch statement.
 
+# Application Features
 ## Auto-Bid Logic
 * Project contains ‘currentBid’ field, which displays the current lowest winning bid for the project.
 * Project also contains ‘currentBidder’ field, which also displays the details of the winning currentBidder and their absolute lowest minimum bid for the project.  This bid can be equal to or less than the currentBid, in other words, the current winning bid for the project.
