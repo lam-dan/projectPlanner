@@ -11,19 +11,22 @@ module.exports = {
 				message: 'Project content cannot be empty.'
 			})
 		}
+		// Destructuring for readability
+		const { name, userId, description, budget, date, type } = req.body
+
 		// Prevent contractors from creating projects
-		if (req.body.type === 1) {
+		if (type === 1) {
 			return res.status(403).send({
-				message: `Permission denied with id ${req.params.projectId}.`
+				message: `Permission denied on project creation.`
 			})
 		}
 		// Create new Project from request body
 		const project = new Project({
-			name: req.body.name || 'No Project Name.',
-			createdBy: req.body.createdBy,
-			description: req.body.description,
-			budget: req.body.budget,
-			date: req.body.date
+			name: name || 'No Project Name.',
+			createdBy: userId,
+			description: description,
+			budget: budget,
+			date: date
 		})
 
 		// Asychronously save project in database
@@ -100,16 +103,20 @@ module.exports = {
 				message: 'Bid cannot be empty or negative.'
 			})
 		}
+
+		// Destructuring for readability
+		const { minBid, type, userId } = req.body
+
 		// Prevent clients from bidding on projects.
-		if (req.body.type === 2) {
+		if (type === 2) {
 			return res.status(403).send({
 				message: `Permission denied with id ${req.params.projectId}.`
 			})
 		}
 		// Create a new bid
 		let newBid = new Bid({
-			minBid: req.body.minBid,
-			userId: req.body.userId
+			minBid: minBid,
+			userId: userId
 		})
 
 		Project.findById(req.params.projectId)
@@ -223,8 +230,19 @@ module.exports = {
 				message: 'Project content cannot be empty.'
 			})
 		}
+
+		// Desctructuring for readability
+		const {
+			type,
+			userId,
+			name,
+			description,
+			budget,
+			date
+		} = req.body
+
 		// Prevents contrators from updating projects
-		if (req.body.type === 1) {
+		if (type === 1) {
 			return res.status(403).send({
 				message: `Permission denied with id ${req.params.projectId}.`
 			})
@@ -238,16 +256,16 @@ module.exports = {
 					})
 				}
 				// Validation to only allow the user who created the project to update the project
-				if (project.createdBy !== req.body.userId) {
+				if (project.createdBy !== userId) {
 					return res.status(403).send({
 						message: `Permission denied with id ${req.params.projectId}.`
 					})
 				}
-				// Update project with req body.
-				project.name = req.body.name
-				project.description = req.body.description
-				project.budget = req.body.budget
-				project.date = req.body.date
+				// Update found project with req body properties.
+				project.name = name
+				project.description = description
+				project.budget = budget
+				project.date = date
 				return project.save()
 			})
 			.then(project => {
