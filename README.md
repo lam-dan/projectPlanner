@@ -1,10 +1,14 @@
 # projectPlanner
-As part of a job application, I am building a REST api to be used at the marketplace for contractors. The market place allows the clients to post jobs, while contractors can bid for projects. 
+As part of a job application, I am building a REST api to be used at the marketplace for contractors. The market place allows the clients to post jobs, while contractors can bid for projects. Key requirements are that the API can:
+* Create a Project.
+* Get a Project.
+* Get the lowest bid amount for a project, which should be calculated efficiently. Complete.
+* Add new bid.
 
 # Tech Stack
 ## MongoDB
 MongoDB is a non-relational database, which stores objects (documents). The data objects are stored as separate documents inside a collection — instead of storing the data into the columns and rows of a traditional relational database.  Data is represented in JSON. No joins allows you the freedom to grab all data in one query instead of multiple queries with SQL relational databases. At the same time, it can also create relationships with object embedding or object referencing. Its native scale-out architecture, enabled by auto ‘sharding,’ aligns well with the horizontal scaling and agility afforded by cloud computing. Sharding essentially means distributing the data  records across multiple machines on multiple servers rather than a single server hosting the entire database.
-    ### Express 
+## Express 
 Express is a server side web application framework for Node.js, released as free and open-source software under the MIT License. It is designed for building web applications and APIs. It has been called the de facto standard server framework for Node.js Express is preferred because it adds dead simple routing, support for handling requests and views, support for Connect middleware, and allowing many other extensions and useful features. 
 ## NodeJS 
 A run time environment that allows JavaScript to be ran in the back-end.  This is especially useful when the front-end application is also written in JavaScript using more of the popular front end frameworks such as Angular and React.  Since the whole application front end back is one language, it allows developers to be more uniformed in coding style and format and more well versed in dealing with all aspects of the application. NodeJS is non-blocking meaning multiple things could be happening at the same time, it does not wait for the callback to complete. It runs on a V8 engine that also processes C++ code behind the scenes to manage other events.
@@ -46,7 +50,7 @@ By destinguishing the user model with a type field, we can add extra controls to
 ## Bid History
 On the project model, I added a field called bidHistory, which is simply an array of objects that we are able to query for all history of bid objects placed against the projects.  Since this field embedded inside the project object, only one query is necessary to grab the history. I have added this operation at the end of every addBid method.  For the front-end application, this will be important for analytics dashboards very informational for the user if he would like to know what kind of bids are being placed, by whom, and at what rate, etc.
 
-## JWT Tokens Authorization
+## JWT Token Authorizations
 On registration, a user is generated a token that is signed with the server’s secret key that is also tied to the logged in user’s user id and type. The token is set to expire in one hour.  Upon any subsequent private api calls, the token must be present in the headers as the key ‘x-access-token’ and verified against the server’s secret key where it would be decoded to attach the user id and type to the request body for API endpoint call.  For this exercise, I have added the server’s secret key in plain view on the secret.env file.  This would typically not be present and added to the .gitignore file, but was done to demonstrate a working application upon submission.
 
 ## Production Ready
