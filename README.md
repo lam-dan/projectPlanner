@@ -21,7 +21,7 @@ For our application, our resource endpoints and methods are the following:
 
 ### Public Routes
 * POST https://`domainName`/users/create 
-    * Registers a user. Type 1: contractors, Type 2: clients
+    * Registers a user. Type:`1` contractors, Type: `2` clients
       ```
       {
        "firstName": "{firstName}",
