@@ -20,7 +20,7 @@ Local Development domain name is: `localhost:3000`
 For our application, our resource endpoints and methods are the following:
 
 ### Public Routes
-* POST https://{domainName}/users/create 
+* POST https://`domainName`/users/create 
     * Registers a user.
       ```
       {
@@ -30,7 +30,7 @@ For our application, our resource endpoints and methods are the following:
        "password": "{password}"
       }
     
-* POST https://{domainName}/users/authenticate 
+* POST https://`domainName`/users/authenticate 
     * Authenticates a user.
       ```
       {
@@ -40,7 +40,8 @@ For our application, our resource endpoints and methods are the following:
 
 ### Private Routes
 The following routes require token authorization that comes from authenticating the user.  
-Request headers need to be passed 'x-access-token' with the value of the token from authenticating a user.
+
+Request headers need to be passed `'x-access-token'` with the value of the token from authenticating a user.
 Example: `'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ4kE5_ioAoIE'`
 
 * POST https://`domainName`/projects 
@@ -54,19 +55,19 @@ Example: `'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ4kE5_ioAoIE'`
        "date": "{mm/dd/yyyy}"
       }
     
-* GET https://{domainName}/projects 
+* GET https://`domainName`/projects 
     * Retrieving all projects
     
-* GET https://{domainName}/projects/:projectId 
+* GET https://`domainName`/projects/:projectId 
     * Retrieving a single Project with a project id in the parameters. Project Object includes lowest currentBid and currentBidder.
     
-* PUT https://{domainName}/projects/:projectId 
+* PUT https://`domainName`/projects/:projectId 
     * Updates a project details
     
-* PUT https://{domainName}/projects/bid/:projectId 
+* PUT https://`domainName`/projects/bid/:projectId 
     * Places the lowest min bid on a project that a contractor is willing to work.
     
-* DELETE https://{domainName}/projects/:projectId 
+* DELETE https://`domainName`/projects/:projectId 
     * Deletes a project with a project id.
     
 
