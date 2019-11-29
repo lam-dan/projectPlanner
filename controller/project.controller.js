@@ -162,26 +162,30 @@ module.exports = {
 					newBid.minBid > project.budget ||
 					newBid.bidDate > project.date
 				) {
-					res.send({
+					let errMessage = {
 						status: 'Fail.',
 						message: `Bid cannot be placed because it exceeds the project budget of ${project.budget} or date of ${project.date}.`,
 						data: {
 							newBid: newBid
 						}
-					})
-					return
+					}
+					return errMessage
 				}
 				// Set the first bid on the project to be the budget amount
 				if (!project.currentBid) {
 					project.currentBid = project.budget
 					project.currentBidder = newBid
+					message = `Congratulations. You are now the lowest bidder at ${newBid.minBid}`
 				}
 				// Check if the subsequent bids are lower than the current bid on the project.
 				else if (newBid.minBid < project.currentBid) {
 					// Check if the user's lowest bid is lower than the lowest minimum bid of the current bidder
 					if (newBid.minBid < project.currentBidder.minBid) {
-						project.currentBid = newBid.minBid
-						project.currentBidder = newBid
+						// If the contractor is already winning the current bid, only update the current bidder object with the lowest minimum bid
+						newBid.userId === project.currentBidder.userId
+							? (project.currentBidder = newBid)
+							: ((project.currentBid = newBid.minBid),
+							  (project.currentBidder = newBid))
 						message = `Congratulations. You are now the lowest bidder at ${newBid.minBid}`
 					} else {
 						// If a bid placed is not the current bidder's lowest bid, than set the new min bid as the new current bid,
@@ -190,15 +194,14 @@ module.exports = {
 						message = `Unfortunately, your new bid of ${newBid.minBid} is not lower than the current bidder's lowest bid`
 					}
 				} else {
-					// If the bid placed isn't lower than the current bid.
-					res.send({
+					let errMessage = {
 						status: 'Fail.',
 						message: `New bid ${newBid.minBid} is not lower than the current bid of ${project.currentBid}.`,
 						data: {
 							newBid: newBid
 						}
-					})
-					return
+					}
+					return errMessage
 				}
 
 				// Only add successful bids to the project bid history Array
@@ -214,6 +217,9 @@ module.exports = {
 						}
 					})
 				})
+			})
+			.then(message => {
+				res.send(message)
 			})
 			.catch(err => {
 				if (err.kind === 'ObjectId') {
