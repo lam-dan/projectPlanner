@@ -5,7 +5,8 @@ const BidSchema = new Schema(
 	{
 		// User id of the person creating the bid
 		userId: { type: String, required: true },
-		minBid: { type: Number, required: true }
+		minBid: { type: Number, required: true },
+		bidDate: { type: Date, required: true }
 	},
 	{ timestamps: true }
 )

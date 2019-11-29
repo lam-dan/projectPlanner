@@ -2,10 +2,20 @@ const Project = require('../model/project.model')
 const mongoose = require('mongoose')
 const Bid = mongoose.model('Bid')
 
+// Function to get the current date for a new bid.
+const __getDate = () => {
+	let today = new Date()
+	let dd = String(today.getDate()).padStart(2, '0')
+	let mm = String(today.getMonth() + 1).padStart(2, '0') //January is 0!
+	let yyyy = today.getFullYear()
+	today = mm + '/' + dd + '/' + yyyy
+	return today
+}
+
 module.exports = {
-	//Create a Project
+	//Create a Project.
 	create: (req, res) => {
-		// Fast exit to check if request body exists
+		// Fast exit to check if request body exists.
 		if (!req.body) {
 			return res.status(400).send({
 				message: 'Project content cannot be empty.'
@@ -50,6 +60,12 @@ module.exports = {
 
 	// Get all projects
 	getAllProjects: (req, res) => {
+		// Prevent contractors from creating see all projects
+		if (type === 1) {
+			return res.status(403).send({
+				message: `Permission denied on projects list.`
+			})
+		}
 		Project.find()
 			.then(projects => {
 				res.send({
@@ -77,10 +93,22 @@ module.exports = {
 						message: `Project not found with id ${req.params.projectId}.`
 					})
 				}
+
+				// Prevent contractors from seeing another contractor's lowest bid
+				// They are only allowed to see the current winning bid.
+				if (type === 1) {
+					const filtered = Object.keys(project)
+						.filter(key => key !== 'currentBidder')
+						.reduce((obj, key) => {
+							obj[key] = project[key]
+							return obj
+						}, {})
+				}
+
 				res.send({
 					status: 'Success.',
 					message: 'Project found.',
-					data: { project: project }
+					data: { project: filtered ? filtered : project }
 				})
 			})
 			.catch(err => {
@@ -95,7 +123,7 @@ module.exports = {
 			})
 	},
 
-	// Add a new bid.
+	// Method only for contractors to add a new bid.  We won't return
 	addBid: (req, res) => {
 		// Fast exit to check if request body exists
 		if (!req.body || req.body.minBid < 0) {
@@ -113,10 +141,12 @@ module.exports = {
 				message: `Permission denied with id ${req.params.projectId}.`
 			})
 		}
+
 		// Create a new bid
 		let newBid = new Bid({
 			minBid: minBid,
-			userId: userId
+			userId: userId,
+			bidDate: __getDate()
 		})
 
 		Project.findById(req.params.projectId)
@@ -130,14 +160,17 @@ module.exports = {
 				// if the user's bid is past the due deadline
 				if (
 					newBid.minBid > project.budget ||
-					newBid.createdAt > project.date
+					newBid.bidDate > project.date
 				) {
-					return res.status(400).send({
-						message:
-							'Bid cannot be placed because it exceeds project budget or due date.'
+					res.send({
+						status: 'Fail.',
+						message: `Bid cannot be placed because it exceeds the project budget of ${project.budget} or date of ${project.date}.`,
+						data: {
+							newBid: newBid
+						}
 					})
+					return
 				}
-
 				// Set the first bid on the project to be the budget amount
 				if (!project.currentBid) {
 					project.currentBid = project.budget
@@ -145,28 +178,41 @@ module.exports = {
 				}
 				// Check if the subsequent bids are lower than the current bid on the project.
 				else if (newBid.minBid < project.currentBid) {
-					// Check if user's lowest bid is lower than the lowest minimum bid of the current bidder
+					// Check if the user's lowest bid is lower than the lowest minimum bid of the current bidder
 					if (newBid.minBid < project.currentBidder.minBid) {
 						project.currentBid = newBid.minBid
 						project.currentBidder = newBid
+						message = `Congratulations. You are now the lowest bidder at ${newBid.minBid}`
 					} else {
-						// If a bid placed is not lower, than set their min bid as the new current bid,
+						// If a bid placed is not the current bidder's lowest bid, than set the new min bid as the new current bid,
 						// while keeping the current bidder
 						project.currentBid = newBid.minBid
+						message = `Unfortunately, your new bid of ${newBid.minBid} is not lower than the current bidder's lowest bid`
 					}
+				} else {
+					// If the bid placed isn't lower than the current bid.
+					res.send({
+						status: 'Fail.',
+						message: `New bid ${newBid.minBid} is not lower than the current bid of ${project.currentBid}.`,
+						data: {
+							newBid: newBid
+						}
+					})
+					return
 				}
 
-				// Add bid to project bid history Array
+				// Only add successful bids to the project bid history Array
 				project.bidHistory.push(newBid)
 
 				// Return saved project after updates
-				return project.save()
-			})
-			.then(project => {
-				res.send({
-					status: 'Success.',
-					message: 'Project updated with new bid.',
-					data: { project: project }
+				return project.save().then(project => {
+					res.send({
+						status: 'Success.',
+						message: message,
+						data: {
+							newBid: newBid
+						}
+					})
 				})
 			})
 			.catch(err => {
@@ -176,7 +222,7 @@ module.exports = {
 					})
 				}
 				return res.status(500).send({
-					message: `Something updating the project with id ${req.params.projectId}`
+					message: `Something went wrong updating the project with id ${req.params.projectId}`
 				})
 			})
 	},
@@ -232,14 +278,7 @@ module.exports = {
 		}
 
 		// Desctructuring for readability
-		const {
-			type,
-			userId,
-			name,
-			description,
-			budget,
-			date
-		} = req.body
+		const { type, userId, name, description, budget, date } = req.body
 
 		// Prevents contrators from updating projects
 		if (type === 1) {
