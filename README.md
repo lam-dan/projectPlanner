@@ -13,23 +13,67 @@ Express is a server side web application framework for Node.js, released as free
 ## NodeJS 
 A run time environment that allows JavaScript to be ran in the back-end.  This is especially useful when the front-end application is also written in JavaScript using more of the popular front end frameworks such as Angular and React.  Since the whole application front end back is one language, it allows developers to be more uniformed in coding style and format and more well versed in dealing with all aspects of the application. NodeJS is non-blocking meaning multiple things could be happening at the same time, it does not wait for the callback to complete. It runs on a V8 engine that also processes C++ code behind the scenes to manage other events.
 ### REST API
-Representational State Transfer is nothing more than what the server will transfer back to the client a representation of the state of the requested resource.  For our application, our endpoints and methods are the following:
-* POST https://www.websitename.com/projects 
-    * Creating a new project.
-* GET https://www.websitename.com/projects 
-    * Retrieving all projects
-* GET https://www.websitename.com/projects/:projectId 
-    * Retrieving a single Project with a project id in the parameters. Project Object includes lowest currentBid and currentBidder.
-* PUT https://www.websitename.com/projects/:projectId 
-    * Updates a project details
-* PUT https://www.websitename.com/projects/bid/:projectId 
-    * Places the lowest min bid on a project that a contractor is willing to work.
-* DELETE https://www.websitename.com/projects/:projectId 
-    * Deletes a project with a project id.
-* POST https://www.websitename.com/users/create 
-    * Registers a user.
-* POST https://www.websitename.com/users/authenticate 
+Representational State Transfer is nothing more than what the server will transfer back to the client a representation of the state of the requested resource.  
+
+Local Development domain name is: `localhost:3000`
+
+For our application, our resource endpoints and methods are the following:
+
+### Public Routes
+* POST https://`domainName`/users/create 
+    * Registers a user. Type:`1` contractors, Type: `2` clients
+      ```
+      {
+       "firstName": "{firstName}",
+       "lastName": "{lastName}",
+       "email": "{email}",
+       "password": "{password}",
+       "type": "{type}"
+      }
+      
+    
+* POST https://`domainName`/users/authenticate 
     * Authenticates a user.
+      ```
+      {
+      "password":"{password}",
+      "email":"{email}"
+      }
+
+### Private Routes
+The following routes require token authorization that comes from authenticating the user.  
+
+Request headers need to be passed `'x-access-token'` with the value of the token from authenticating a user.
+
+Example: `'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ4kE5_ioAoIE'`
+
+* POST https://`domainName`/projects 
+    * Creating a new project.
+    Example:
+      ```
+      {
+       "name": "{projectName}",
+       "description": "{description}",
+       "budget": {number},
+       "date": "{mm/dd/yyyy}"
+      }
+    
+* GET https://`domainName`/projects 
+    * Retrieving all projects
+    
+* GET https://`domainName`/projects/:projectId 
+    * Retrieving a single Project with a project id in the parameters. Project Object includes lowest currentBid and currentBidder.
+    
+* PUT https://`domainName`/projects/:projectId 
+    * Updates a project details
+    
+* PUT https://`domainName`/projects/bid/:projectId 
+    * Places the lowest min bid on a project that a contractor is willing to work.
+    
+* DELETE https://`domainName`/projects/:projectId 
+    * Deletes a project with a project id.
+    
+
     
 ## Promises 
 Promises were used instead of callbacks because of its ability to easily chain asynchronous calls and avoid nested callbacks, therefore, making the code much more readable.  By chaining asynchronous calls, we can catch all the errors in one catch statement.
