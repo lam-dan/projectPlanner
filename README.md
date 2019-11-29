@@ -76,26 +76,40 @@ Example: `'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ4kE5_ioAoIE'`
 
     
 ## Promises 
-Promises were used instead of callbacks because of its ability to easily chain asynchronous calls and avoid nested callbacks, therefore, making the code much more readable.  By chaining asynchronous calls, we can catch all the errors in one catch statement.
+Promises were used instead of callbacks because of its ability to easily chain asynchronous calls and help with nested callbacks which makes the code much more readable.  Also by chaining asynchronous calls, it is possible to catch all the errors in one catch statement.
 
 # Application Features
-## Auto-Bid Logic
+## Auto-Bid Logic with Fast Exits
 * Project contains ‘currentBid’ field, which displays the current lowest winning bid for the project.
 * Project also contains ‘currentBidder’ field, which also displays the details of the winning currentBidder and their absolute lowest minimum bid for the project.  This bid can be equal to or less than the currentBid, in other words, the current winning bid for the project.
+* If the bid placed is greater than the budget, or bid date is greater than the project due date, then we fail placing the bid the return.
+* If there isn't a project current bid, we set the first bid to be the winning current bid and current bidder.
 * As subsequent bids are placed, we compare each bid placed to the currentBid (the current winning bid) and then to the currentBidder’s minimumBid (the lowest bid current winning bidder made).
 * If the bid is less in both cases, then we have a new currentBid and currentBidder for the project.
 * If the bid is less than the currentBid, but not lower than the absolute lowest of the currentBidder’s lowest bid minBid, then we set the currentBid to the bid made.
+* If current bid is not lower than the current bid, then we fail placing the bid, and return.
+* Any successful bids are pushed into the bid history array and the project object saved.
+
 
 A few interesting things I added:
 
 ## User Type
-By destinguishing the user model with a type field, we can add extra controls to our APIs and make certain CRUD operations in the back-end only available to Clients vs Contractors.  Currently, when deleting or updating a project, I have a check to see if the current logged in user’s id matches the one that created the project.  There are also additional checks on user type:1 (contractors) and user type: 2 (clients). For example, a Contractor should not be able to create, delete, or update projects.  A client should not be able to place bids on other projects.  The user type will also be critical in the front-end application for defining what views, buttons, and pages are available for the user.  If the user is a client vs a contractor, he may get an entirely different view and front-end functionality.
+By destinguishing the user model with a type field, we can add extra controls to our APIs and make certain CRUD operations in the back-end only available to Clients (type:2) as opposed to Contractors (type: 1).  
+User type checks implemented:
+* Contractor should not be able to create, delete, or update projects.  
+* A client should not be able to place bids on other projects.  
+* A contractor should also not be able to see the lowest bid from a user, only the current lowest winning bid.
+The user type will also be critical in the application's front-end functionality for defining what views, buttons, and pages are available for the user.  
 
 ## Bid History
 On the project model, I added a field called bidHistory, which is simply an array of objects that we are able to query for all history of bid objects placed against the projects.  Since this field embedded inside the project object, only one query is necessary to grab the history. I have added this operation at the end of every addBid method.  For the front-end application, this will be important for analytics dashboards very informational for the user if he would like to know what kind of bids are being placed, by whom, and at what rate, etc.
 
-## JWT Token Authorizations
-On registration, a user is generated a token that is signed with the server’s secret key that is also tied to the logged in user’s user id and type. The token is set to expire in one hour.  Upon any subsequent private api calls, the token must be present in the headers as the key ‘x-access-token’ and verified against the server’s secret key where it would be decoded to attach the user id and type to the request body for API endpoint call.  For this exercise, I have added the server’s secret key in plain view on the secret.env file.  This would typically not be present and added to the .gitignore file, but was done to demonstrate a working application upon submission.
+## JWT Token Authorizations for Security
+* On registration, a user is generated a token that is signed with the server’s secret key and is tied to the logged in user’s userId and type. 
+* The token is set to expire in one hour in case it was somehow stolen.  
+* Upon any subsequent private api calls, the token must be present in the headers as the key ‘x-access-token’ and verified against the server’s secret key where it would be decoded to attach the userId and type to the request body for any API endpoint call.  
+* Thus, when perofrming an api call to delete or update a project, there is a check with the request body's userId against the userId of the target object for an additional layer of security.  
+* For this exercise, the server’s secret key is in plain view on the secret.env file.  This would typically not be present and added to the .gitignore file, but was done to demonstrate a working application upon submission.
 
 ## Production Ready
 Security is a big thing for this API to be production ready. For this application to be production ready, I would generate the secret key to be added to a .env file where it would be added to the .gitignore.  This .env file would be encrypted and sent over to the application’s developer for safekeeping and deployment on their environment. There should be ways to address logging out of the application by removing the token from the client in the front-end.
