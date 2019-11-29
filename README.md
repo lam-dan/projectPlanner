@@ -85,7 +85,7 @@ Promises were used instead of callbacks because of its ability to easily chain a
 * If the bid placed is greater than the budget, or bid date is greater than the project due date, then we fail placing the bid the return.
 * If there isn't a project current bid, we set the first bid to be the winning current bid and current bidder.
 * As subsequent bids are placed, we compare each bid placed to the currentBid (the current winning bid) and then to the currentBidder’s minimumBid (the lowest bid current winning bidder made).
-* If the bid is less in both cases, then we have a new currentBid and currentBidder for the project.
+* If the bid is less in both cases, then we have a new currentBid and currentBidder for the project.  If the bid placed is from a contractor that already has the lowest bid, we only update currentBidder to capture his new lowest minBid, but we leave currentBid unchanged since it can only be beat by other contractors.
 * If the bid is less than the currentBid, but not lower than the absolute lowest of the currentBidder’s lowest bid minBid, then we set the currentBid to the bid made.
 * If current bid is not lower than the current bid, then we fail placing the bid, and return.
 * Any successful bids are pushed into the bid history array and the project object saved.
