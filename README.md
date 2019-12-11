@@ -1,5 +1,5 @@
 # projectPlanner
-As part of a job application, I am building a REST api to be used at the marketplace for contractors. The market place allows the clients to post jobs, while contractors can bid for projects. Key requirements are that the API can:
+As part of a job application, I built a REST api to be used at the marketplace for contractors. The market place allows the clients to post jobs, while contractors can bid for projects. Key requirements are that the API can:
 * Create a Project.
 * Get a Project.
 * Get the lowest bid amount for a project, which should be calculated efficiently.
